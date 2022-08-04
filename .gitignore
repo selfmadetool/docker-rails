@@ -19,7 +19,7 @@
 
 /node_modules
 /yarn-error.log
-
+/docker/data
 /public/assets
 .byebug_history
 /vendor/
