@@ -1,0 +1,32 @@
+version: '3.0'
+services:
+  mysql:
+    container_name: docker-rails-mysql
+    restart: always
+    build: ./docker/mysql
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    ports:
+      - '3307:3306'
+    volumes:
+      - ./docker/data/mysql:/var/lib/mysql
+
+  app:
+    container_name: docker-rails-app
+    build:
+      context: ./
+      dockerfile: ./docker/rails/Dockerfile
+    ports:
+      - '3000:3000'
+    depends_on:
+      - mysql
+    volumes:
+      - .:/app:delegated
+      - bundle:/usr/local/bundle:cached
+    tty: true
+    stdin_open: true
+    command: ['bundle', 'exec', 'rails', 'server', '-p', '3000', '-b', '0.0.0.0']
+
+volumes:
+  bundle:
+    driver: local
